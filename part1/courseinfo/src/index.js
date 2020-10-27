@@ -18,12 +18,13 @@ const Part = (props) => {
 
 const Content = (props) => {
   const { parts } = props;
+  const [chapter1, chapter2, chapter3] = parts
 
   return (
     <div>
-      <Part chapter={parts[0]}/>
-      <Part chapter={parts[1]}/>
-      <Part chapter={parts[2]}/>
+      <Part chapter={chapter1}/>
+      <Part chapter={chapter2}/>
+      <Part chapter={chapter3}/>
     </div>
   )
 };

@@ -5,19 +5,38 @@ import './index.css';
 const Button = (props) => {
   const {clickHandleName, cssClassName, text} = props
   return <button className={cssClassName} onClick={clickHandleName}>{text}</button>
-}
+};
 
 const Statistic = (props) => {
   const {text, value} = props
   return (
-    <tbody>
+    <>
       <tr>
         <td> {`${text}:`}</td>
         <td>{value}</td>
       </tr>
+    </>
+  ) 
+};
+
+const Statistics = (props) => {
+  const {
+    goodValue, neutralValue,
+    badValue, totalValue,
+    averageValue,positiveValue
+  } = props
+
+  return (
+    <tbody>
+      <Statistic text='Good' value={goodValue}/>
+      <Statistic text='Neutral' value={neutralValue}/>
+      <Statistic text='Bad' value= {badValue}/>
+      <Statistic text='All' value={totalValue} />
+      <Statistic text='Average' value={averageValue} />
+      <Statistic text='Positive' value={positiveValue}/>  
     </tbody>
-  )  
-}
+  )
+};
 
 const App = () => {
   // save clicks of each button to its own state
@@ -28,12 +47,12 @@ const App = () => {
   const handleGoodFeedbackNumber = () => setGood(good + 1);
   const handleNeutralFeedbackNumber = () => setNeutral(neutral + 1);
   const handleBadFeedbackNumber = () => setBad(bad + 1);
-  const displayTotalNumberFeedback = () => good + neutral + bad;
+  const displayTotalFeedbackNumber = () => good + neutral + bad;
 
-  const displayAverage = () => displayTotalNumberFeedback() > 0 ? ((good - bad)/(displayTotalNumberFeedback())): 0;
+  const displayAverage = () => displayTotalFeedbackNumber() > 0 ? ((good - bad)/(displayTotalFeedbackNumber())): 0;
 
-  const displayPositivePercent = () => displayTotalNumberFeedback() > 0 ? 
-  `${(good / displayTotalNumberFeedback()) * 100} %` : 0;
+  const displayPositivePercent = () => displayTotalFeedbackNumber() > 0 ? 
+  `${(good / displayTotalFeedbackNumber()) * 100} %` : 0;
 
   return (
     <div className='unicafe-wrapper'>
@@ -47,14 +66,18 @@ const App = () => {
       </section>
       <section className='unicafe-stats'>
         <h1 className='unicafe-header'>Statistics</h1>
-        <table className='unicafe-stat-list'>
-          <Statistic text='Good' value={good}/>
-          <Statistic text='Neutral' value={neutral}/>
-          <Statistic text='Bad' value= {bad}/>
-          <Statistic text='All' value={displayTotalNumberFeedback()} />
-          <Statistic text='Average' value={displayAverage()} />
-          <Statistic text='Positive' value={displayPositivePercent()} />  
+        {displayTotalNumberFeedback() > 0 ? (
+          <table className='unicafe-stat-list'>
+            <Statistics 
+              goodValue={good}
+              neutralValue={neutral} 
+              badValue={bad} 
+              totalValue={displayTotalNumberFeedback()}
+              averageValue={displayAverage()}
+              positiveValue={displayPositivePercent()}
+            /> 
         </table>
+        ): (<p className='unicafe-no-feedback'>No feedback given</p>)}
       </section>
     </div>
   )

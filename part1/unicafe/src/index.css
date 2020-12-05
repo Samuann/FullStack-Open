@@ -68,10 +68,13 @@ html, body {
   background-color: #FF5252;
 }
 
-.unicafe-stat-list {
-  list-style: none;
-  text-align: left; 
+.unicafe-stat-list,
+.unicafe-no-feedback {
   color: #FFFFFF;
+}
+
+.unicafe-stat-list {
+  text-align: left;
 }
 
 .unicafe-numbers{

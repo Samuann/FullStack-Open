@@ -66,13 +66,13 @@ const App = () => {
       </section>
       <section className='unicafe-stats'>
         <h1 className='unicafe-header'>Statistics</h1>
-        {displayTotalNumberFeedback() > 0 ? (
+        {displayTotalFeedbackNumber() > 0 ? (
           <table className='unicafe-stat-list'>
             <Statistics 
               goodValue={good}
               neutralValue={neutral} 
               badValue={bad} 
-              totalValue={displayTotalNumberFeedback()}
+              totalValue={displayTotalFeedbackNumber()}
               averageValue={displayAverage()}
               positiveValue={displayPositivePercent()}
             /> 

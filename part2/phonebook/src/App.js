@@ -1,18 +1,24 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Filter from './components/Filter';
 import PersonForm from './components/PersonForm';
 import Persons from './components/Persons';
+import axios from 'axios'
 
 const App = () => {
-  const [ persons, setPersons ] = useState([
-    { name: 'Arto Hellas', number: '040-1234567'},
-    { name: 'Ada Lovelace', number: '049-12345678'},
-    { name: 'Dan Abramov', number: '12-43-234345' },
-    { name: 'Mary Poppendieck', number: '39-23-6423122'}
-  ]);
+  const [ persons, setPersons ] = useState('');
   const [ newName, setNewName ] = useState('');
   const [ newNumber, setNewNumber ] = useState('');
   const [ newSearch, setNewSearch ] = useState('');
+
+  const getPersonsData = () => {
+    axios.get('http://localhost:3001/persons')
+    .then(response => {
+      setPersons(response.data)
+    });
+  }
+
+  //useEffect by default is runs after every completed render
+  useEffect(getPersonsData, []);
 
   const handleNameChange = (event) => {
     setNewName(event.target.value);
@@ -26,7 +32,7 @@ const App = () => {
     setNewSearch(event.target.value);
   }
   
-  const filterName = persons.filter(person => (person.name.toLowerCase() === newName.toLowerCase()));
+  const filterName = persons ? persons.filter(person => (person.name.toLowerCase() === newName.toLowerCase())) : null;
 
   const addNewName = (event) => {
     event.preventDefault();
@@ -58,7 +64,7 @@ const App = () => {
           numberChangeAction={handleNumberChange}
         />
         <h2>Numbers</h2>
-        <Persons personsList={persons} newSearchValue={newSearch} />
+        {persons && <Persons personsList={persons} newSearchValue={newSearch} />}
       </div>
     </>
   );

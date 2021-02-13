@@ -2,22 +2,16 @@ import React, {useState} from 'react';
 import Country from '../components/Country';
 
 const Countries = (props) => {
-    const {countryName, country} = props;
-    const [selectedCountry, setSelectedCountry] = useState(null);
-    const [toggleOn, setToggleOn] = useState(false);
+    const {countryName, toggleAction, selected, id, country} = props;
 
-    const selectCountry = (event) => {
-        setSelectedCountry(event.target.attributes.country.value);
-        setToggleOn(!toggleOn);
-    };
-    
+    const countrySelected = () => toggleAction(id);
     return (
         <div>
             <li style={{display: 'inline-block'}}> {countryName}</li>
-            <button onClick={selectCountry} country={countryName}> 
-                {selectedCountry === countryName && toggleOn? 'hide' : 'show'} 
+            <button onClick={countrySelected} country={countryName}> 
+                {selected? 'hide' : 'show'} 
             </button>
-            {selectedCountry === countryName && toggleOn && <Country countryData={[country]} />}
+            {selected && <Country countryData={[country]} />}
     </div>
     )
 }

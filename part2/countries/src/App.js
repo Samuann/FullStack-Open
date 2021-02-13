@@ -7,7 +7,6 @@ const App = () => {
   const [allCountryList, setAllCountryList] = useState([]);
   const [countrySearchInput, setCountrySearchInput] = useState('');
 
-
   const getCountryData = () => {
     axios.get('https://restcountries.eu/rest/v2/all')
     .then(response => setAllCountryList(response.data))

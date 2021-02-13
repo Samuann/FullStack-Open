@@ -5,6 +5,15 @@ import Countries from '../components/Countries';
 const CountryList = (props) => {
     const {searchValue, allCountryList} = props;
     const [filteredList, setFilteredList] = useState([]);
+    const [toggle, setToggle] = useState({});
+    const handleToggle = (id) => {
+        setToggle(
+            {
+                ...toggle,
+                [id]: !toggle[id],
+            }
+        );
+    }
 
     const filteredCountryList = allCountryList.length && searchValue.length && allCountryList.filter(country => country.name.toLowerCase().includes(searchValue.toLowerCase()));
 
@@ -13,11 +22,14 @@ const CountryList = (props) => {
     useEffect(handleCountrySearch, [searchValue]);
 
     const toggleCountryInfo = () => (
-        filteredList.map(country => (
-            <div>
-                <Countries countryName={country.name} country={country}/>
-            </div>
-        )   
+        filteredList.map(country => {
+            const indexCountry = filteredCountryList.indexOf(country);
+            return (
+                <div key={indexCountry}>
+                    <Countries countryName={country.name} country={country} toggleAction={handleToggle} selected={toggle[indexCountry]} id={indexCountry}/>
+                </div>
+            )
+        }   
     ));
 
 

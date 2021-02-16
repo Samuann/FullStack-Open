@@ -10,7 +10,6 @@ const Weather = (props) => {
         axios.get(`http://api.weatherstack.com/current?access_key=${api_key}&query=${countryName}`)
         .then(response => setWeatherData(response.data.current))
     }
-    console.log(weatherData, 'weather data');
     useEffect(getWeatherDate, []);
     const weatherIcon= weatherData && weatherData.weather_icons[0];
 

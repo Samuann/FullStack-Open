@@ -26,7 +26,12 @@ const CountryList = (props) => {
             const indexCountry = filteredCountryList.indexOf(country);
             return (
                 <div key={indexCountry}>
-                    <Countries countryName={country.name} country={country} toggleAction={handleToggle} selected={toggle[indexCountry]} id={indexCountry}/>
+                    <Countries 
+                    countryName={country.name} 
+                    country={country} 
+                    toggleAction={handleToggle} 
+                    selected={toggle[indexCountry]} 
+                    id={indexCountry}/>
                 </div>
             )
         }   

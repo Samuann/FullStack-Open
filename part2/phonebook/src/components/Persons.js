@@ -1,9 +1,17 @@
 import React from 'react';
 
 const Persons = (props) => {
-    const {personsList, newSearchValue } = props;
+    const {personsList, newSearchValue, deleteAction } = props;
 
-    const displayAllNames = () => personsList.map( person => <li key={person.name}> {person.name} {person.number}</li>);
+    const displayAllNames = () => personsList.map( person => 
+        (
+            <React.Fragment key={person.id}> 
+                <li> 
+                    {person.name} {person.number}
+                </li>
+                <button onClick={() => deleteAction(person.id, person.name)}>delete</button>
+            </React.Fragment>
+        ));
 
     const displayFilteredName = () => {
         return personsList.filter(people =>  people.name.toLowerCase().includes(newSearchValue.toLowerCase()))
@@ -11,9 +19,11 @@ const Persons = (props) => {
     }
 
     return (
-        <ul>
-            {newSearchValue.length ? displayFilteredName(): displayAllNames()}
-        </ul>
+        <>
+            <ul>
+                {newSearchValue.length ? displayFilteredName(): displayAllNames()}
+            </ul>
+        </>    
     );
 };
 

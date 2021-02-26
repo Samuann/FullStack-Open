@@ -4,11 +4,34 @@ import PersonForm from './components/PersonForm';
 import Persons from './components/Persons';
 import personsServices from './services/personsService';
 
+const Notification = (props) => {
+  const { message } = props;
+
+  const successStyle = {
+    border: '2px green solid',
+    backgroundColor: '#d8d9dd',
+    padding:'10px',
+    color: 'green'
+  }
+
+  const failureStyle = {
+    border: '2px red solid',
+    backgroundColor: '#d8d9dd',
+    padding:'10px',
+    color: 'red'
+  }
+
+  return message ? (
+    <h3 style={!message.isError ? successStyle : failureStyle}> {message.message}</h3>
+  ) : null
+};
+
 const App = () => {
   const [ persons, setPersons ] = useState('');
   const [ newName, setNewName ] = useState('');
   const [ newNumber, setNewNumber ] = useState('');
   const [ newSearch, setNewSearch ] = useState('');
+  const [ newNotificationMessage, setNewNotificationMessage ] = useState(null);
 
   const getPersonsData = () => {
     personsServices.readPersonData()
@@ -17,7 +40,6 @@ const App = () => {
     });
   };
 
-  //useEffect by default runs after every completed render
   useEffect(getPersonsData, []);
 
   const handleNameChange = (event) => {
@@ -31,15 +53,40 @@ const App = () => {
   const handleSearch = (event) => {
     setNewSearch(event.target.value);
   }
+
+  const ensureBothInputExistNotification = () => {
+    setNewNotificationMessage(
+      { 
+        message: `Please ensure both name and phone number is added`, 
+        isError: true
+      }
+    );
+    setTimeout(() => {
+      setNewNotificationMessage(null)
+    }, 5000);
+  }
   
-  //check for difference in phone number, if there is a difference then list is updated and the number for matching id is replaced
+  // if person's name exist on the list check for difference in phone number, i.e new input versus already existing number, 
+  // if there is a difference then list is updated and the phone number for person's matching id is replaced
   const isNotSameNumber = (person) => {
     const [personMatch] = person;
     const updatedNumber = {...personMatch, number: newNumber};
     const confirmNumberMessage = window.confirm(`${updatedNumber.name} is already added to phonebook, replace old number with new one?`);
 
-    return confirmNumberMessage ? (personsServices.updatePersonData(updatedNumber, updatedNumber.id)
-    .then(response => setPersons(persons.map(peps => peps.name === newName ? response : peps)))) : null;
+    return confirmNumberMessage && updatedNumber.name.length && updatedNumber.number.length ? (personsServices.updatePersonData(updatedNumber, updatedNumber.id)
+    .then(response => setPersons(persons.map(peps => peps.name === newName ? response : peps))))
+    .catch(error => {
+      setNewNotificationMessage(
+        {
+        message: `Information of ${updatedNumber.name} has already been removed from server`, 
+        isError: true
+        }
+      );
+      setTimeout(() => {
+        setNewNotificationMessage(null);
+      }, 5000);
+    }) 
+    : ensureBothInputExistNotification();
   };
 
   const addNewName = (event) => {
@@ -57,17 +104,27 @@ const App = () => {
       return isNotSameNumber(filterNameAndNumber);
     };
 
+    // if name with phone number exists return alert to show this
     if(filterJustName?.length) {
       return alert(`${newName} is already added to phonebook`)
     }
     
-    return personsServices.createPersonData(noteObject)
+    // to ensure that both input fields for name and phone number is filled before a new list is created in phonebook
+    return newName.length && newNumber.length  ?  (personsServices.createPersonData(noteObject)
     .then(response => setPersons(persons.concat(response)))
+    .then(setNewNotificationMessage(
+      { 
+        message: `Added ${noteObject.name}`, 
+        isError: false
+      }
+      ))
+    .then(setTimeout(() => {
+      setNewNotificationMessage(null)
+    }, 5000))) : ensureBothInputExistNotification();
 
   };
 
   const filterPersonsDeletion = (id, response) => {
-    console.log(response, 'response');
     return persons.filter(person => person.id !== id);
   }
 
@@ -82,6 +139,7 @@ const App = () => {
   return (
     <>
       <div>
+        <Notification message={newNotificationMessage}/>
         <h2>Phonebook</h2>
         <Filter searchAction={handleSearch} />
       </div>  

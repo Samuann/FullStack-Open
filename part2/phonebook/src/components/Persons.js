@@ -13,6 +13,7 @@ const Persons = (props) => {
             </React.Fragment>
         ));
 
+    // display names from Phonebook search    
     const displayFilteredName = () => {
         return personsList.filter(people =>  people.name.toLowerCase().includes(newSearchValue.toLowerCase()))
         .map(human => <li key={human.name}> {human.name} {human.number} </li>);

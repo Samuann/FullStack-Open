@@ -113,7 +113,7 @@ const App = () => {
       return isNotSameNumber(filterNameAndNumber);
     };
 
-    // if name with phone number exists return alert to show this
+    // if name with phone number exists return alert to show message that contact details already exists
     if(filterJustName?.length) {
       return alert(`${newName} is already added to phonebook`)
     }

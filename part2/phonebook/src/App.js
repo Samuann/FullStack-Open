@@ -75,6 +75,15 @@ const App = () => {
 
     return confirmNumberMessage && updatedNumber.name.length && updatedNumber.number.length ? (personsServices.updatePersonData(updatedNumber, updatedNumber.id)
     .then(response => setPersons(persons.map(peps => peps.name === newName ? response : peps))))
+    .then(setNewNotificationMessage(
+      { 
+        message: `Phone number updated  `, 
+        isError: false
+      }
+      ))
+    .then(setTimeout(() => {
+      setNewNotificationMessage(null)
+    }, 5000))
     .catch(error => {
       setNewNotificationMessage(
         {
@@ -144,7 +153,7 @@ const App = () => {
         <Filter searchAction={handleSearch} />
       </div>  
       <div>
-        <h2>add a new</h2>
+        <h2>add a new phone number</h2>
         <PersonForm 
           submitAction={addNewName}
           newNameValue={newName}

@@ -1,6 +1,7 @@
 import React, {useEffect, useState} from 'react';
-import Country from '../components/Country';
+
 import Countries from '../components/Countries';
+import Country from '../components/Country';
 
 const CountryList = (props) => {
     const {searchValue, allCountryList} = props;
